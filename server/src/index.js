@@ -7,6 +7,8 @@ import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import { notFound, errorHandler } from './middleware/error.js';
 
+import itemRoutes from './routes/items.js';
+
 dotenv.config();
 const app = express();
 
@@ -24,6 +26,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/items', itemRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
