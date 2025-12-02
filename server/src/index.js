@@ -9,6 +9,7 @@ import { notFound, errorHandler } from './middleware/error.js';
 import path from 'path';
 
 import itemRoutes from './routes/items.js';
+import requestRoutes from './routes/request.js';
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
+app.use('/api', requestRoutes);
 
 // Static files for uploaded images
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
