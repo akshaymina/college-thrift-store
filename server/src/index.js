@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.js';
 import { notFound, errorHandler } from './middleware/error.js';
+import path from 'path';
 
 import itemRoutes from './routes/items.js';
 
@@ -27,6 +28,9 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/items', itemRoutes);
+
+// Static files for uploaded images
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.use(notFound);
 app.use(errorHandler);

@@ -9,7 +9,8 @@ category: { type: String, required: true, trim: true },
 condition: { type: String, enum: ['new', 'like-new', 'good', 'fair'], default: 'good' },
 sellerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
 status: { type: String, enum: ['available', 'reserved', 'sold'], default: 'available', index: true },
-campus: { type: String, default: 'Main', index: true }
+campus: { type: String, default: 'Main', index: true },
+images: { type: [String], default: [] }
 }, { timestamps: true });
 
 

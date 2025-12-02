@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import { requireAuth } from '../middleware/auth.js';
 import { listItems, getItem, createItem, updateItem, updateStatus, deleteItem } from '../controllers/itemController.js';
-
+import { uploadImages } from '../middleware/upload.js';
 
 const router = Router();
 
@@ -21,7 +21,7 @@ router.get('/:id', [param('id').isMongoId()], getItem);
 
 
 // Create
-router.post('/', requireAuth, [
+router.post('/', requireAuth, uploadImages.array('images', 5), [
 body('title').isString().trim().isLength({ min: 3 }),
 body('price').isFloat({ min: 0 }),
 body('category').isString().trim().isLength({ min: 2 }),
@@ -32,14 +32,16 @@ body('campus').optional().isString().trim()
 
 
 // Update
-router.patch('/:id', requireAuth, [
+router.patch('/:id', requireAuth, uploadImages.array('images', 5), [
 param('id').isMongoId(),
 body('title').optional().isString().trim().isLength({ min: 3 }),
 body('price').optional().isFloat({ min: 0 }),
 body('category').optional().isString().trim().isLength({ min: 2 }),
 body('condition').optional().isIn(['new', 'like-new', 'good', 'fair']),
 body('description').optional().isString().trim(),
-body('campus').optional().isString().trim()
+body('campus').optional().isString().trim(),
+body('replaceImages').optional().isBoolean(),
+body('remove').optional().isArray()
 ], updateItem);
 
 

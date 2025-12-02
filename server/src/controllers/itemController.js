@@ -55,7 +55,9 @@ export async function createItem (req, res) {
 
 
   const { title, description = '', price, category, condition = 'good', campus = 'Main' } = req.body;
-  const item = await Item.create({ title, description, price, category, condition, campus, sellerId: req.user._id });
+  
+  const files = (req.files || []).map(f => `/uploads/${f.filename}`);
+  const item = await Item.create({ title, description, price, category, condition, campus, images: files, sellerId: req.user._id });
   res.status(201).json(item);
 }
 
@@ -75,6 +77,21 @@ export async function updateItem (req, res) {
 
   const allowed = ['title', 'description', 'price', 'category', 'condition', 'campus'];
   for (const k of allowed) if (k in req.body) item[k] = req.body[k];
+
+ 
+  // images handling
+  const newFiles = (req.files || []).map(f => `/uploads/${f.filename}`);
+  const replace = String(req.body.replaceImages || 'false') === 'true';
+  const toRemove = Array.isArray(req.body.remove) ? req.body.remove : [];
+ 
+  if (replace) {
+  item.images = newFiles;
+  } else {
+  // remove any listed paths, then append new files
+  if (toRemove.length) item.images = item.images.filter(p => !toRemove.includes(p));
+  if (newFiles.length) item.images.push(...newFiles);
+  }
+  
   await item.save();
   res.json(item);
 }
