@@ -77,42 +77,56 @@ export default function CreateItem(){
     <div className="container">
       <div className="card max-w-2xl mx-auto">
         <h2 className="text-2xl font-semibold mb-3">List an Item</h2>
-        <form onSubmit={onSubmit} className="space-y-3">
+        <form onSubmit={onSubmit} className="space-y-4">
           <div>
+            <label className="text-sm mb-1 block">Title</label>
             <input className="input" value={title} onChange={e=>setTitle(e.target.value)} placeholder="Title (min 3 chars)" />
-            <div className="text-xs text-gray-500 mt-1">Required</div>
-          </div>
-          <textarea className="input" value={description} onChange={e=>setDescription(e.target.value)} placeholder="Description (optional)" />
-          <div>
-            <input className="input" value={price} onChange={e=>setPrice(e.target.value)} placeholder="Price" type="number" step="0.01" min="0" />
-            <div className="text-xs text-gray-500 mt-1">Required, must be a number ≥ 0</div>
+            <div className="text-xs muted mt-1">Required</div>
           </div>
           <div>
-            <input className="input" value={category} onChange={e=>setCategory(e.target.value)} placeholder="Category (min 2 chars)" />
-            <div className="text-xs text-gray-500 mt-1">Required. E.g., Books, Electronics, Furniture</div>
+            <label className="text-sm mb-1 block">Description</label>
+            <textarea className="input" value={description} onChange={e=>setDescription(e.target.value)} placeholder="Description (optional)" />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm mb-1 block">Price</label>
+              <input className="input" value={price} onChange={e=>setPrice(e.target.value)} placeholder="Price" type="number" step="0.01" min="0" />
+              <div className="text-xs muted mt-1">Required, number ≥ 0</div>
+            </div>
+            <div>
+              <label className="text-sm mb-1 block">Category</label>
+              <input className="input" value={category} onChange={e=>setCategory(e.target.value)} placeholder="Category (min 2 chars)" />
+              <div className="text-xs muted mt-1">E.g., Books, Electronics</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm mb-1 block">Condition</label>
+              <select className="input" value={condition} onChange={e=>setCondition(e.target.value)}>
+                <option value="new">New</option>
+                <option value="like-new">Like New</option>
+                <option value="good">Good</option>
+                <option value="fair">Fair</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm mb-1 block">Campus</label>
+              <input className="input" value={campus} onChange={e=>setCampus(e.target.value)} placeholder="Campus (optional, default: Main)" />
+            </div>
           </div>
           <div>
-            <select className="input" value={condition} onChange={e=>setCondition(e.target.value)}>
-              <option value="new">New</option>
-              <option value="like-new">Like New</option>
-              <option value="good">Good</option>
-              <option value="fair">Fair</option>
-            </select>
-            <div className="text-xs text-gray-500 mt-1">Condition (optional)</div>
+            <label className="block text-sm font-medium mb-2">Upload Images</label>
+            <input type="file" multiple onChange={onFiles} className="block text-sm text-[--muted]" />
+            <div className="flex gap-2 mt-3">
+              {preview.map((p,idx)=> <img key={idx} src={p} alt="preview" className="h-20 rounded-md object-cover" />)}
+            </div>
           </div>
-          <input className="input" value={campus} onChange={e=>setCampus(e.target.value)} placeholder="Campus (optional, default: Main)" />
-          <div>
-            <label className="block text-sm font-medium mb-1">Upload Images</label>
-            <input type="file" multiple onChange={onFiles} className="block text-sm" />
-          </div>
-          <div className="flex gap-2">
-            {preview.map((p,idx)=> <img key={idx} src={p} alt="preview" className="h-20 rounded-md" />)}
-          </div>
+
           <div className="flex justify-end">
             <button className="button" type="submit">Create</button>
           </div>
         </form>
-        {error && <div className="text-red-600 mt-3 p-2 bg-red-50 rounded">{error}</div>}
+        {error && <div className="text-red-400 mt-3 p-2 bg-[rgba(255,0,0,0.04)] rounded">{error}</div>}
       </div>
     </div>
   )

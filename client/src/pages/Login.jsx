@@ -26,15 +26,21 @@ export default function Login(){
     <div className="container">
       <div className="card mx-auto max-w-md">
         <h2 className="text-2xl font-semibold mb-4">Login</h2>
-        <form onSubmit={onSubmit} className="space-y-3">
-          <input className="input" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
-          <input className="input" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" />
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <label className="text-sm mb-1 block">Email</label>
+            <input className="input" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
+          </div>
+          <div>
+            <label className="text-sm mb-1 block">Password</label>
+            <input className="input" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" />
+          </div>
           <div className="flex justify-end">
             <button className="button" type="submit">Login</button>
           </div>
         </form>
-        {error && <div className="text-red-600 mt-3">{error}</div>}
-        <div className="small mt-3">New? <Link to="/signup" className="text-blue-600">Create an account</Link></div>
+        {error && <div className="text-red-400 mt-3 p-2 bg-[rgba(255,0,0,0.04)] rounded">{error}</div>}
+        <div className="small mt-3">New? <Link to="/signup" className="text-[--text] font-medium">Create an account</Link></div>
       </div>
     </div>
   )

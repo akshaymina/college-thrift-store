@@ -43,13 +43,13 @@ export default function Home(){
         </form>
       </div>
 
-      {error && <div className="text-red-600 p-2 bg-red-50 rounded mb-3">{error}</div>}
+      {error && <div className="text-red-400 p-2 bg-[rgba(255,0,0,0.04)] rounded mb-3">{error}</div>}
       {loading ? <div className="p-6">Loading items...</div> : (
         <div className="grid">
           {items.length === 0 && <div className="card">No items found</div>}
           {items.map(item=> (
-            <Link to={`/items/${item._id || item.id}`} key={item._id || item.id} className="card block overflow-hidden">
-              <div className="relative h-48 rounded-md overflow-hidden mb-3 bg-gray-50">
+            <Link to={`/items/${item._id || item.id}`} key={item._id || item.id} className="card hover-raise block overflow-hidden">
+              <div className="card-image relative h-48 rounded-md overflow-hidden mb-4">
                 {item.images && item.images.length>0 ? (
                   <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full h-full object-cover" />
                 ) : <div className="w-full h-full flex items-center justify-center small">No Image</div>}
@@ -58,12 +58,12 @@ export default function Home(){
                   <span className="price-badge">₹{item.price || 'N/A'}</span>
                 </div>
                 <div className="absolute top-3 right-3">
-                  <span className="px-2 py-1 rounded bg-white/70 text-xs muted">{item.category || 'General'}</span>
+                  <span className="glass-badge text-xs">{item.category || 'General'}</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-lg font-semibold text-gray-900">{item.title}</div>
+                  <div className="text-lg font-semibold">{item.title}</div>
                   <div className="text-sm muted">{item.campus || 'Campus not set'}</div>
                 </div>
                 <div className="text-sm muted">{item.sellerName || item.seller?.name || ''}</div>
