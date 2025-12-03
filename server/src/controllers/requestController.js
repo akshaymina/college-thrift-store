@@ -25,27 +25,73 @@ export async function createRequest (req, res) {
 	if (exists) return res.status(400).json({ message: 'You have already requested this item' });
 
 	const reqDoc = await BuyRequest.create({ itemId, buyerId: req.user._id });
-	res.status(201).json(reqDoc);
+
+  // Return the newly created request populated so clients can display it immediately
+  const populated = await BuyRequest.findById(reqDoc._id)
+    .populate({
+      path: 'itemId',
+      select: 'title description price category condition campus images sellerId',
+      populate: { path: 'sellerId', select: 'name email' }
+    })
+    .populate('buyerId', 'name email')
+    .lean();
+
+  // also provide backward-compatible aliases
+  const normalized = {
+    ...populated,
+    item: populated.itemId,
+    seller: populated.itemId?.sellerId,
+    buyer: populated.buyerId
+  };
+
+  res.status(201).json(normalized);
 }
 
 
 // GET /api/requests/mine (buyer)
 export async function listMyRequests (req, res) {
-const requests = await BuyRequest.find({ buyerId: req.user._id })
-.sort('-createdAt')
-.lean();
-res.json({ data: requests });
+  const requests = await BuyRequest.find({ buyerId: req.user._id })
+    .populate({
+      path: 'itemId',
+      select: 'title description price category condition campus images sellerId',
+      populate: { path: 'sellerId', select: 'name email' }
+    })
+    .populate('buyerId', 'name email')
+    .sort('-createdAt')
+    .lean();
+  // provide backward-compatible aliases for older frontends
+  const normalized = requests.map(r => ({
+    ...r,
+    item: r.itemId,
+    seller: r.itemId?.sellerId,
+    buyer: r.buyerId
+  }));
+
+  res.json({ data: normalized });
 }
 
 
 // GET /api/requests/received (seller)
 export async function listReceived (req, res) {
-// find items owned by seller, then requests for those items
-const myItemIds = await Item.find({ sellerId: req.user._id }).distinct('_id');
-const requests = await BuyRequest.find({ itemId: { $in: myItemIds } })
-.sort('-createdAt')
-.lean();
-res.json({ data: requests });
+  // find items owned by seller, then requests for those items
+  const myItemIds = await Item.find({ sellerId: req.user._id }).distinct('_id');
+  const requests = await BuyRequest.find({ itemId: { $in: myItemIds } })
+    .populate({
+      path: 'itemId',
+      select: 'title description price category condition campus images sellerId',
+      populate: { path: 'sellerId', select: 'name email' }
+    })
+    .populate('buyerId', 'name email')
+    .sort('-createdAt')
+    .lean();
+  const normalized = requests.map(r => ({
+    ...r,
+    item: r.itemId,
+    seller: r.itemId?.sellerId,
+    buyer: r.buyerId
+  }));
+
+  res.json({ data: normalized });
 }
 
 

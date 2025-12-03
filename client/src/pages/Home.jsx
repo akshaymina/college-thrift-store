@@ -36,26 +36,38 @@ export default function Home(){
 
   return (
     <div>
-      <div className="mb-4">
-        <form onSubmit={onSearch} className="flex gap-2">
-          <input className="input flex-1" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search items" />
+      <div className="mb-6">
+        <form onSubmit={onSearch} className="flex gap-3 items-center">
+          <input className="input flex-1" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search items, category, campus..." />
           <button className="button">Search</button>
         </form>
       </div>
 
       {error && <div className="text-red-600 p-2 bg-red-50 rounded mb-3">{error}</div>}
-      {loading ? <div className="p-4">Loading items...</div> : (
+      {loading ? <div className="p-6">Loading items...</div> : (
         <div className="grid">
           {items.length === 0 && <div className="card">No items found</div>}
           {items.map(item=> (
-            <Link to={`/items/${item._id || item.id}`} key={item._id || item.id} className="card block">
-              <div className="bg-gray-100 rounded-md mb-3 h-40 flex items-center justify-center overflow-hidden">
+            <Link to={`/items/${item._id || item.id}`} key={item._id || item.id} className="card block overflow-hidden">
+              <div className="relative h-48 rounded-md overflow-hidden mb-3 bg-gray-50">
                 {item.images && item.images.length>0 ? (
-                  <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} style={{maxHeight:'100%',maxWidth:'100%',objectFit:'cover'}} />
-                ) : <div className="small">No Image</div>}
+                  <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full h-full object-cover" />
+                ) : <div className="w-full h-full flex items-center justify-center small">No Image</div>}
+
+                <div className="absolute top-3 left-3">
+                  <span className="price-badge">₹{item.price || 'N/A'}</span>
+                </div>
+                <div className="absolute top-3 right-3">
+                  <span className="px-2 py-1 rounded bg-white/70 text-xs muted">{item.category || 'General'}</span>
+                </div>
               </div>
-              <div className="text-lg font-medium">{item.title}</div>
-              <div className="small">{item.price ? `₹${item.price}` : 'Price not set'}</div>
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="text-lg font-semibold text-gray-900">{item.title}</div>
+                  <div className="text-sm muted">{item.campus || 'Campus not set'}</div>
+                </div>
+                <div className="text-sm muted">{item.sellerName || item.seller?.name || ''}</div>
+              </div>
             </Link>
           ))}
         </div>

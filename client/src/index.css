@@ -3,20 +3,62 @@
 @tailwind utilities;
 
 :root{
-	--brand: #0f172a; /* slate-900 */
-	--accent: #2563eb; /* blue-600 */
+	--brand: #0b1221; /* deep navy */
+	--accent: #7c3aed; /* violet-600 */
+	--accent-2: #06b6d4; /* teal-400 */
 	--muted: #6b7280;
 }
 
+/* dark theme variables */
+:root[data-theme="dark"]{
+	--brand: #e6eef8;
+	--accent: #7c3aed;
+	--accent-2: #06b6d4;
+	--muted: #9aa3b2;
+}
+
+[data-theme="dark"] body{
+	background: linear-gradient(180deg,#071129,#061225);
+	color: var(--brand);
+}
+
+[data-theme="dark"] .card{ @apply bg-[#07142a] border-gray-800 }
+[data-theme="dark"] .card-hero{ @apply bg-gradient-to-r from-[#061323] to-[#081831] }
+[data-theme="dark"] .input{ @apply bg-[#062033] border-gray-700 text-gray-100 }
+[data-theme="dark"] .button-secondary{ @apply bg-gray-800 text-gray-100 border-gray-700 }
+
+[data-theme="dark"] .small{ color: var(--muted) }
+[data-theme="dark"] .brand{ color: var(--accent-2) }
+
 @layer base{
 	html,body,#root{height:100%;}
-	body{font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#f8fafc; color:var(--brand);}
+	body{font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg,#f8fafc, #f1f5f9); color:var(--brand);} 
 }
 
 /* small utility classes used by components */
 .container{max-width:1100px;margin-left:auto;margin-right:auto;padding:1rem}
-.card{@apply bg-white rounded-lg p-4 shadow-sm}
-.button{@apply bg-blue-600 text-white px-3 py-2 rounded-md}
-.input{@apply w-full p-2 border border-gray-200 rounded-md}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-.small{font-size:0.9rem;color:var(--muted)}
+.card{
+	@apply bg-white rounded-xl p-4 shadow-md border border-gray-100 transition-transform transform hover:-translate-y-1;
+}
+.card-hero{
+	@apply bg-gradient-to-r from-violet-50 to-cyan-50 rounded-xl p-6 shadow-lg;
+}
+.button{
+	@apply px-4 py-2 rounded-lg text-white font-semibold shadow inline-flex items-center gap-2;
+	background: linear-gradient(90deg,var(--accent),var(--accent-2));
+}
+.button-secondary{
+	@apply px-3 py-2 rounded-md text-gray-800 bg-gray-100 border border-gray-200;
+}
+.input{ @apply w-full p-3 border border-gray-200 rounded-lg bg-white }
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+.small{font-size:0.95rem;color:var(--muted)}
+
+.price-badge{
+	@apply inline-block px-3 py-1 rounded-full text-sm font-semibold text-white;
+	background: linear-gradient(90deg,#f97316,#ef4444);
+}
+
+.brand{font-weight:800;color:var(--accent)}
+
+.muted{color:var(--muted)}
