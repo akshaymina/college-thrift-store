@@ -77,6 +77,9 @@ export default function Navbar(){
               <>
                 {/* Action Buttons */}
                 <div className="hidden sm:flex items-center gap-2">
+                  <Button to="/wishlist" variant="secondary" size="sm">
+                    ❤️ Wishlist
+                  </Button>
                   <Button to="/items/new" variant="primary" size="sm">
                     ✚ Sell
                   </Button>
@@ -117,6 +120,13 @@ export default function Navbar(){
                           className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                         >
                           👤 Profile
+                        </Link>
+                        <Link 
+                          to="/wishlist" 
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        >
+                          ❤️ Wishlist
                         </Link>
                         <Link 
                           to="/requests/received" 

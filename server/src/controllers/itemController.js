@@ -2,20 +2,31 @@ import { validationResult } from 'express-validator';
 import Item from '../models/Item.js';
 
 function buildQuery (params) {
-  const { search, category, status, campus, seller, minPrice, maxPrice } = params;
-  const q = {};
+  const { search, category, status, campus, seller, minPrice, maxPrice, condition } = params;
+  const q = { $or: [{ deleted: false }, { deleted: { $exists: false } }] };
+  
   if (category) q.category = category;
   if (status) q.status = status;
   if (campus) q.campus = campus;
+  if (condition) q.condition = condition;
   if (seller) q.sellerId = seller;
-  if (minPrice || maxPrice) q.price = {
-    ...(minPrice ? { $gte: Number(minPrice) } : {}),
-    ...(maxPrice ? { $lte: Number(maxPrice) } : {})
-  };
+  
+  if (minPrice || maxPrice) {
+    q.price = {
+      ...(minPrice ? { $gte: Number(minPrice) } : {}),
+      ...(maxPrice ? { $lte: Number(maxPrice) } : {})
+    };
+  }
+  
   if (search) {
     const rx = new RegExp(search, 'i');
-    q.$or = [{ title: rx }, { description: rx }];
+    q.$and = [
+      { $or: [{ title: rx }, { description: rx }] },
+      q.$or
+    ];
+    delete q.$or;
   }
+  
   return q;
 }
 

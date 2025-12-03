@@ -23,23 +23,61 @@ export default function ItemDetail(){
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [pageError, setPageError] = useState(null)
+  const [inWishlist, setInWishlist] = useState(false)
+  const [wishlistLoading, setWishlistLoading] = useState(false)
   const { user } = useAuth()
 
-  useEffect(()=>{ fetchItem() },[id])
+  useEffect(()=>{ fetchItem(); trackView() },[id])
 
   async function fetchItem(){
     setLoading(true)
     setPageError(null)
     try{
-      console.log('Fetching item:', id)
       const res = await api.get(`/items/${id}`)
-      console.log('Item response:', res.data)
-      // server returns item and seller alias when populated
       setItem(res.data.item || res.data)
+      if(user){
+        checkWishlist(id)
+      }
     }catch(e){
       console.error('Failed to fetch item:', e)
       setPageError(e?.message || 'Failed to load item')
     }finally{ setLoading(false) }
+  }
+
+  async function trackView(){
+    try{
+      await api.post('/views/track', { itemId: id })
+    }catch(e){
+      console.error('Failed to track view:', e)
+    }
+  }
+
+  async function checkWishlist(itemId){
+    try{
+      const res = await api.get(`/wishlist/check/${itemId}`)
+      setInWishlist(res.data.inWishlist || false)
+    }catch(e){
+      console.error('Failed to check wishlist:', e)
+    }
+  }
+
+  async function toggleWishlist(){
+    if(!user){ alert('Login required'); return }
+    setWishlistLoading(true)
+    try{
+      if(inWishlist){
+        await api.delete(`/wishlist/${id}`)
+        setInWishlist(false)
+      } else {
+        await api.post('/wishlist', { itemId: id })
+        setInWishlist(true)
+      }
+    }catch(e){
+      console.error('Failed to toggle wishlist:', e)
+      alert('Failed to update wishlist')
+    }finally{
+      setWishlistLoading(false)
+    }
   }
 
   async function sendRequest(){
@@ -96,6 +134,11 @@ export default function ItemDetail(){
             <div className="flex items-center gap-3 text-sm muted">
               <img src={item.seller?.avatarUrl || '/placeholder-avatar.png'} alt="seller" className="w-7 h-7 rounded-full object-cover" />
               <div>Seller: <span className="font-medium text-[--text]">{item.seller?.name || 'Unknown'}</span></div>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <Button onClick={() => toggleWishlist()} disabled={wishlistLoading} variant={inWishlist ? "primary" : "secondary"}>
+                {inWishlist ? '❤️ Saved' : '🤍 Save'}
+              </Button>
             </div>
           </div>
         </div>

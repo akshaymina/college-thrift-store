@@ -12,6 +12,8 @@ import path from 'path';
 
 import itemRoutes from './routes/items.js';
 import requestRoutes from './routes/request.js';
+import wishlistRoutes from './routes/wishlist.js';
+import viewHistoryRoutes from './routes/viewHistory.js';
 
 dotenv.config();
 const app = express();
@@ -34,6 +36,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api', requestRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/views', viewHistoryRoutes);
 
 // Static files for uploaded images
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));

@@ -8,6 +8,7 @@ import CreateItem from './pages/CreateItem'
 import MyRequests from './pages/MyRequests'
 import ReceivedRequests from './pages/ReceivedRequests'
 import Profile from './pages/Profile'
+import Wishlist from './pages/Wishlist'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/AdminRoute'
@@ -28,6 +29,7 @@ export default function App(){
           <Route path="/items/new" element={<ProtectedRoute><CreateItem /></ProtectedRoute>} />
           <Route path="/items/:id" element={<ItemDetail />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
           <Route path="/requests/mine" element={<ProtectedRoute><MyRequests /></ProtectedRoute>} />
