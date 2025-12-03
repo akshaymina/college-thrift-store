@@ -45,12 +45,13 @@ export default function Wishlist(){
 
       {wishlist.length === 0 ? (
         <div className="card text-center py-12">
-          <div className="text-4xl mb-2">📭</div>
-          <div className="text-lg font-medium">No saved items yet</div>
-          <p className="text-sm muted mt-2">Start adding items to your wishlist!</p>
+          <div className="text-6xl mb-4 animate-float">💖</div>
+          <div className="text-lg font-medium">Your wishlist is empty</div>
+          <p className="text-sm muted mt-2">Save items you love to find them later.</p>
           <Link to="/">
-            <Button className="mt-4">Browse Items</Button>
+            <Button className="mt-4 px-6 py-3" variant="primary">Browse Items</Button>
           </Link>
+          <div className="text-sm muted mt-3">Tip: Tap the heart on an item to save it.</div>
         </div>
       ) : (
         <>

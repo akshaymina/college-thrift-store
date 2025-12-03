@@ -103,3 +103,38 @@
 
 /* helper for overflow blocks */
 .prose{ color:var(--text); }
+
+/* Skeleton loading */
+.skeleton{
+	background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.02) 100%);
+	border-radius: 0.5rem;
+	position: relative;
+	overflow: hidden;
+}
+.skeleton::after{
+	content: '';
+	position: absolute;
+	top: 0; left: -150%; height: 100%; width: 150%;
+	background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+	animation: shimmer 1.6s linear infinite;
+}
+
+/* Mobile filter panel animations */
+.filters-panel{
+	transition: max-height 240ms cubic-bezier(.2,.9,.2,1), opacity 180ms ease;
+	overflow: hidden;
+}
+.filters-panel.open{ max-height: 1200px; opacity: 1; }
+.filters-panel.closed{ max-height: 0; opacity: 0; }
+
+/* Trending card hover shine */
+.trending-card{ position:relative; overflow:hidden }
+.trending-card::before{ content:''; position:absolute; inset:0; background:linear-gradient(120deg, rgba(var(--brand),0.04), rgba(255,255,255,0.00)); opacity:0; transition:opacity .26s ease, transform .36s ease; transform: translateY(6px); }
+.trending-card:hover::before{ opacity:1; transform: translateY(0); }
+
+/* Slightly larger type scale for headings */
+h1{ font-size:1.95rem; line-height:1.05 }
+h2{ font-size:1.25rem }
+
+/* Dropdown & button color tweaks */
+.dropdown-surface{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.04); }

@@ -54,14 +54,18 @@ export default function Home(){
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">🔥 Trending Now</h2>
           {trendingLoading ? (
-            <div className="p-4 text-center muted">Loading trending...</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="card skeleton h-40 p-3" />
+              ))}
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {trending.slice(0, 6).map(item => (
-                <Link to={`/items/${item._id}`} key={item._id} className="card hover-raise block overflow-hidden">
+                <Link to={`/items/${item._id}`} key={item._id} className="card hover-raise block overflow-hidden trending-card transition-all duration-200">
                   <div className="card-image relative h-40 rounded-md overflow-hidden mb-3">
                     {item.images && item.images.length > 0 ? (
-                      <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full h-full object-cover" />
+                      <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 ease-out hover:scale-105" />
                     ) : <div className="w-full h-full flex items-center justify-center text-xs muted">No Image</div>}
                     <div className="absolute top-2 left-2">
                       <span className="price-badge text-sm">₹{item.price}</span>
@@ -86,15 +90,19 @@ export default function Home(){
       <div>
         <h2 className="text-2xl font-bold mb-4">Browse Items</h2>
         {loading ? (
-          <div className="p-6 text-center">Loading items...</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(9)].map((_, i) => (
+              <div key={i} className="card skeleton h-56" />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {items.length === 0 && <div className="card col-span-full text-center py-8">No items found</div>}
             {items.map(item=> (
-              <Link to={`/items/${item._id || item.id}`} key={item._id || item.id} className="card hover-raise block overflow-hidden">
+              <Link to={`/items/${item._id || item.id}`} key={item._id || item.id} className="card hover-raise block overflow-hidden transition-all duration-200">
                 <div className="card-image relative h-48 rounded-md overflow-hidden mb-4">
                   {item.images && item.images.length>0 ? (
-                    <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full h-full object-cover" />
+                    <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 ease-out hover:scale-105" />
                   ) : <div className="w-full h-full flex items-center justify-center small">No Image</div>}
 
                   <div className="absolute top-3 left-3">

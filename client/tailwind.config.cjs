@@ -41,9 +41,20 @@ module.exports = {
           '0%,100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-6px)' },
         }
+        ,
+        'slide-down': {
+          '0%': { transform: 'translateY(-8px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' }
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' }
+        }
       },
       animation: {
         float: 'float 6s ease-in-out infinite',
+        'slide-down': 'slide-down 160ms cubic-bezier(.2,.9,.2,1) both',
+        shimmer: 'shimmer 1.6s linear infinite'
       }
     },
   },
