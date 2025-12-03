@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 // theme removed: fixed dark theme
 import Button from './Button'
 import Logo from '../512px-Mnit_logo.png'
+import { UPLOAD_BASE } from '../services/api'
 
 export default function Navbar(){
   const { user, logout } = useAuth()
@@ -91,9 +92,13 @@ export default function Navbar(){
                     className="flex items-center gap-2 p-2 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                     title={user.name}
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[rgba(124,58,237,0.4)] to-[rgba(6,182,212,0.2)] flex items-center justify-center text-white text-sm font-semibold">
-                      {user.name?.[0] || 'U'}
-                    </div>
+                    {user.avatarUrl ? (
+                      <img src={user.avatarUrl.startsWith('/uploads') ? `${UPLOAD_BASE}${user.avatarUrl}` : user.avatarUrl} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[rgba(124,58,237,0.4)] to-[rgba(6,182,212,0.2)] flex items-center justify-center text-white text-sm font-semibold">
+                        {user.name?.[0] || 'U'}
+                      </div>
+                    )}
                     <span className="hidden sm:inline text-sm font-medium">{user.name?.split(' ')[0]}</span>
                   </button>
 

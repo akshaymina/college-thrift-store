@@ -10,6 +10,9 @@ import ReceivedRequests from './pages/ReceivedRequests'
 import Profile from './pages/Profile'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminRoute from './components/AdminRoute'
+import Admin from './pages/Admin'
+import Settings from './pages/Settings'
 
 export default function App(){
   return (
@@ -25,6 +28,8 @@ export default function App(){
           <Route path="/items/new" element={<ProtectedRoute><CreateItem /></ProtectedRoute>} />
           <Route path="/items/:id" element={<ItemDetail />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
           <Route path="/requests/mine" element={<ProtectedRoute><MyRequests /></ProtectedRoute>} />
           <Route path="/requests/received" element={<ProtectedRoute><ReceivedRequests /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to='/' />} />

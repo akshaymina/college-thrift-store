@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import api from '../services/api'
+import api, { UPLOAD_BASE } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function Profile(){
@@ -37,7 +37,7 @@ export default function Profile(){
         <h2 className="text-xl font-semibold mb-2">My Profile</h2>
         <div className="flex gap-6 items-center mb-4">
           <div>
-            <img src={profile?.avatarUrl || '/placeholder-avatar.png'} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
+            <img src={profile?.avatarUrl ? (profile.avatarUrl.startsWith('/uploads') ? `${UPLOAD_BASE}${profile.avatarUrl}` : profile.avatarUrl) : '/placeholder-avatar.png'} alt="avatar" className="w-24 h-24 rounded-full object-cover" />
           </div>
           <div>
             <div className="text-lg font-medium">{profile?.name}</div>
