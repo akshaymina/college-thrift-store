@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import Button from '../components/Button'
 
 export default function Signup(){
   const [name, setName] = useState('')
@@ -41,7 +42,7 @@ export default function Signup(){
             <input className="input" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" />
           </div>
           <div className="flex justify-end">
-            <button className="button" type="submit">Signup</button>
+            <Button type="submit">Signup</Button>
           </div>
         </form>
         {error && <div className="text-red-400 mt-3 p-2 bg-[rgba(255,0,0,0.04)] rounded">{error}</div>}

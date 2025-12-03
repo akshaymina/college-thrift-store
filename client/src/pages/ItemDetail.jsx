@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api, { UPLOAD_BASE } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
+import Button from '../components/Button'
 
 export default function ItemDetail(){
   const { id } = useParams()
@@ -77,8 +78,8 @@ export default function ItemDetail(){
         {success && <div className="text-green-400 p-2 bg-[rgba(0,255,128,0.04)] rounded mt-2">{success}</div>}
         <textarea className="input mt-3" value={message} onChange={e=>setMessage(e.target.value)} placeholder="Message to seller (optional)" rows={4} />
         <div className="mt-4 flex gap-3">
-          <button className="button" onClick={sendRequest}>Request to Buy</button>
-          <button className="button-secondary" onClick={()=>{ setMessage(''); setError(null); setSuccess(null); }}>Reset</button>
+          <Button onClick={sendRequest}>Request to Buy</Button>
+          <Button variant="secondary" onClick={()=>{ setMessage(''); setError(null); setSuccess(null); }}>Reset</Button>
         </div>
       </div>
     </div>

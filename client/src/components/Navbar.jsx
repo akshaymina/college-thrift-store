@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
+import Button from './Button'
 
 export default function Navbar(){
   const { user, logout } = useAuth()
@@ -34,21 +35,22 @@ export default function Navbar(){
 
             {user ? (
               <>
-                <Link to="/items/new" className="button">Sell</Link>
-                <Link to="/requests/mine" className="button-secondary">Requests</Link>
+                <Button to="/items/new" variant="primary" size="sm">Sell</Button>
+                <Button to="/requests/mine" variant="secondary" size="sm">Requests</Button>
                 <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-[rgba(255,255,255,0.03)]">
                   <div className="w-9 h-9 bg-[rgba(255,255,255,0.03)] rounded-lg flex items-center justify-center text-sm font-semibold">{user.name?.[0] || 'U'}</div>
                   <div className="text-sm">
                     <div className="font-medium">{user.name}</div>
                     <div className="text-xs muted">{user.email}</div>
                   </div>
-                  <button onClick={()=>{ logout(); nav('/') }} className="button-secondary">Logout</button>
+                  <Button onClick={()=>{ logout(); nav('/') }} variant="outline" size="sm">Logout</Button>
                 </div>
+                {/* duplicate block removed */}
               </>
             ) : (
               <>
                 <Link to="/login" className="text-sm muted hover:text-white transition">Login</Link>
-                <Link to="/signup" className="button">Sign up</Link>
+                <Button to="/signup" variant="primary" size="sm">Sign up</Button>
               </>
             )}
           </div>

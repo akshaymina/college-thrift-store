@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import api, { UPLOAD_BASE } from '../services/api'
 import { Link } from 'react-router-dom'
+import Button from '../components/Button'
 
 export default function Home(){
   const [items, setItems] = useState([])
@@ -39,7 +40,7 @@ export default function Home(){
       <div className="mb-6">
         <form onSubmit={onSearch} className="flex gap-3 items-center">
           <input className="input flex-1" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search items, category, campus..." />
-          <button className="button">Search</button>
+          <Button type="submit">Search</Button>
         </form>
       </div>
 

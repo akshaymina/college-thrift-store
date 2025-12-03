@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import api, { API_BASE } from '../services/api'
 import { useNavigate } from 'react-router-dom'
+import Button from '../components/Button'
 
 export default function CreateItem(){
   const [title, setTitle] = useState('')
@@ -123,7 +124,7 @@ export default function CreateItem(){
           </div>
 
           <div className="flex justify-end">
-            <button className="button" type="submit">Create</button>
+            <Button type="submit">Create</Button>
           </div>
         </form>
         {error && <div className="text-red-400 mt-3 p-2 bg-[rgba(255,0,0,0.04)] rounded">{error}</div>}
