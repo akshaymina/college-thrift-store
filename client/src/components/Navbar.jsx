@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useRef, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
 import Button from './Button'
@@ -8,49 +8,155 @@ export default function Navbar(){
   const { user, logout } = useAuth()
   const { theme, toggle } = useTheme()
   const nav = useNavigate()
+  const loc = useLocation()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const dropdownRef = useRef(null)
+
+  // Track scroll for shadow effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Detect active nav link
+  const isActive = (path) => loc.pathname === path ? 'text-white' : 'muted'
+
+  const handleLogout = () => {
+    logout()
+    setDropdownOpen(false)
+    nav('/')
+  }
 
   return (
-    <header className="sticky top-4 z-50 px-4">
-      <div className="container">
-        <div className="glass flex items-center justify-between p-3 rounded-2xl hover:shadow-glow-md transition-shadow duration-300">
-          <div className="flex items-center gap-4">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[rgba(124,58,237,0.18)] to-[rgba(6,182,212,0.06)] flex items-center justify-center text-white font-extrabold">CT</div>
-              <div>
-                <div className="text-lg font-semibold">College Thrift</div>
-                <div className="text-xs muted">Campus Marketplace</div>
-              </div>
-            </Link>
-            <nav className="hidden md:flex items-center gap-4 ml-4">
-              <Link to="/" className="text-sm muted hover:text-white transition">Browse</Link>
-              <Link to="/items" className="text-sm muted hover:text-white transition">Items</Link>
-              <Link to="/about" className="text-sm muted hover:text-white transition">About</Link>
-            </nav>
-          </div>
+    <header className={`sticky top-0 z-50 transition-all duration-200 ${scrolled ? 'shadow-md' : ''}`}>
+      <div className="glass border-b border-[rgba(255,255,255,0.06)] bg-[rgba(11,13,16,0.8)]">
+        <div className="container max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[rgba(124,58,237,0.25)] to-[rgba(6,182,212,0.08)] flex items-center justify-center text-white font-bold text-sm transition-transform group-hover:scale-105">
+              CT
+            </div>
+            <div className="hidden sm:flex flex-col">
+              <div className="text-base font-bold leading-tight">College Thrift</div>
+              <div className="text-xs opacity-60">Campus Marketplace</div>
+            </div>
+          </Link>
 
-          <div className="flex items-center gap-3">
-            <button title="Toggle theme" onClick={toggle} className="p-2 rounded-md bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.04)] transition">
+          {/* Center Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
+            <Link to="/" className={`text-sm font-medium transition-colors ${isActive('/')}`}>
+              Browse
+            </Link>
+            <Link to="/items" className={`text-sm font-medium transition-colors ${isActive('/items')}`}>
+              Items
+            </Link>
+            <a href="#" className={`text-sm font-medium muted hover:text-white transition-colors`}>
+              About
+            </a>
+          </nav>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Theme Toggle */}
+            <button 
+              title="Toggle theme" 
+              onClick={toggle} 
+              className="p-2 rounded-lg bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.06)] transition-all"
+            >
               {theme === 'dark' ? '🌙' : '☀️'}
             </button>
 
             {user ? (
               <>
-                <Button to="/items/new" variant="primary" size="sm">Sell</Button>
-                <Button to="/requests/mine" variant="secondary" size="sm">Requests</Button>
-                <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-[rgba(255,255,255,0.03)]">
-                  <div className="w-9 h-9 bg-[rgba(255,255,255,0.03)] rounded-lg flex items-center justify-center text-sm font-semibold">{user.name?.[0] || 'U'}</div>
-                  <div className="text-sm">
-                    <div className="font-medium">{user.name}</div>
-                    <div className="text-xs muted">{user.email}</div>
-                  </div>
-                  <Button onClick={()=>{ logout(); nav('/') }} variant="outline" size="sm">Logout</Button>
+                {/* Action Buttons */}
+                <div className="hidden sm:flex items-center gap-2">
+                  <Button to="/items/new" variant="primary" size="sm">
+                    ✚ Sell
+                  </Button>
+                  <Button to="/requests/mine" variant="secondary" size="sm">
+                    📥 Requests
+                  </Button>
                 </div>
-                {/* duplicate block removed */}
+
+                {/* User Dropdown */}
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                    title={user.name}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[rgba(124,58,237,0.4)] to-[rgba(6,182,212,0.2)] flex items-center justify-center text-white text-sm font-semibold">
+                      {user.name?.[0] || 'U'}
+                    </div>
+                    <span className="hidden sm:inline text-sm font-medium">{user.name?.split(' ')[0]}</span>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {dropdownOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-48 rounded-xl glass border border-[rgba(255,255,255,0.06)] shadow-xl animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.03)]">
+                        <p className="text-sm font-semibold">{user.name}</p>
+                        <p className="text-xs muted">{user.email}</p>
+                      </div>
+
+                      <div className="py-2">
+                        <Link 
+                          to="/profile" 
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        >
+                          👤 Profile
+                        </Link>
+                        <Link 
+                          to="/requests/received" 
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        >
+                          📦 My Listings
+                        </Link>
+                        <a 
+                          href="#" 
+                          onClick={(e) => {e.preventDefault(); setDropdownOpen(false)}}
+                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                        >
+                          ⚙️ Settings
+                        </a>
+                      </div>
+
+                      <div className="px-2 py-2 border-t border-[rgba(255,255,255,0.03)]">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-[rgba(248,113,113,0.1)] rounded-lg transition-colors"
+                        >
+                          🚪 Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <>
-                <Link to="/login" className="text-sm muted hover:text-white transition">Login</Link>
-                <Button to="/signup" variant="primary" size="sm">Sign up</Button>
+                <Link to="/login" className="hidden sm:inline text-sm font-medium muted hover:text-white transition-colors">
+                  Login
+                </Link>
+                <Button to="/signup" variant="primary" size="sm">
+                  Sign up
+                </Button>
               </>
             )}
           </div>
