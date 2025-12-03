@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 import { login, signup, me, logout } from '../controllers/authController.js';
 import { requireAuth } from '../middleware/auth.js';
+import User from '../models/User.js';
 
 const router = Router();
 
@@ -18,5 +19,7 @@ router.post('/login', [
 
 router.get('/me', requireAuth, me);
 router.post('/logout', requireAuth, logout);
+
+// Password change moved to users route (/api/users/me/password) for consistency
 
 export default router;

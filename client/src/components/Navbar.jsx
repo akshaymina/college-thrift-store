@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { useTheme } from '../contexts/ThemeContext'
+// theme removed: fixed dark theme
 import Button from './Button'
+import Logo from '../512px-Mnit_logo.png'
 
 export default function Navbar(){
   const { user, logout } = useAuth()
-  const { theme, toggle } = useTheme()
+  // no theme toggle; UI uses fixed dark theme
   const nav = useNavigate()
   const loc = useLocation()
   const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -47,11 +48,9 @@ export default function Navbar(){
           
           {/* Brand */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[rgba(124,58,237,0.25)] to-[rgba(6,182,212,0.08)] flex items-center justify-center text-white font-bold text-sm transition-transform group-hover:scale-105">
-              CT
-            </div>
+            <img src={Logo} alt="MNIT Thrift Store" className="w-10 h-10 rounded-lg object-cover transition-transform group-hover:scale-105" />
             <div className="hidden sm:flex flex-col">
-              <div className="text-base font-bold leading-tight">College Thrift</div>
+              <div className="text-base font-bold leading-tight">MNIT Thrift Store</div>
               <div className="text-xs opacity-60">Campus Marketplace</div>
             </div>
           </Link>
@@ -71,14 +70,7 @@ export default function Navbar(){
 
           {/* Right: Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Theme Toggle */}
-            <button 
-              title="Toggle theme" 
-              onClick={toggle} 
-              className="p-2 rounded-lg bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.06)] transition-all"
-            >
-              {theme === 'dark' ? '🌙' : '☀️'}
-            </button>
+            {/* Theme toggle removed — fixed dark theme */}
 
             {user ? (
               <>

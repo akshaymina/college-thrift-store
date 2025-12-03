@@ -42,9 +42,14 @@ export async function listItems (req, res) {
 
 // GET /api/items/:id
 export async function getItem (req, res) {
-  const item = await Item.findById(req.params.id).lean();
+  const item = await Item.findById(req.params.id)
+    .populate('sellerId', 'name email avatarUrl')
+    .lean();
   if (!item) return res.status(404).json({ message: 'Item not found' });
-  res.json(item);
+
+  // Attach seller alias for frontend convenience
+  const seller = item.sellerId ? { id: item.sellerId._id, name: item.sellerId.name, email: item.sellerId.email, avatarUrl: item.sellerId.avatarUrl } : null;
+  res.json({ ...item, seller });
 }
 
 

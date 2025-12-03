@@ -7,6 +7,7 @@ import ItemDetail from './pages/ItemDetail'
 import CreateItem from './pages/CreateItem'
 import MyRequests from './pages/MyRequests'
 import ReceivedRequests from './pages/ReceivedRequests'
+import Profile from './pages/Profile'
 import Navbar from './components/Navbar'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -23,6 +24,7 @@ export default function App(){
           <Route path="/signup" element={<Signup />} />
           <Route path="/items/new" element={<ProtectedRoute><CreateItem /></ProtectedRoute>} />
           <Route path="/items/:id" element={<ItemDetail />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/requests/mine" element={<ProtectedRoute><MyRequests /></ProtectedRoute>} />
           <Route path="/requests/received" element={<ProtectedRoute><ReceivedRequests /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to='/' />} />

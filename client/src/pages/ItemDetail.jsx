@@ -4,6 +4,17 @@ import api, { UPLOAD_BASE } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 import Button from '../components/Button'
 
+export function Lightbox({ open, images, index, onClose }){
+  if(!open) return null
+  const img = images?.[index]
+  if(!img) return null
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={onClose}>
+      <img src={`${UPLOAD_BASE}${img}`} alt="full" className="max-h-[90vh] max-w-[90vw] object-contain" />
+    </div>
+  )
+}
+
 export default function ItemDetail(){
   const { id } = useParams()
   const [item, setItem] = useState(null)
@@ -23,6 +34,7 @@ export default function ItemDetail(){
       console.log('Fetching item:', id)
       const res = await api.get(`/items/${id}`)
       console.log('Item response:', res.data)
+      // server returns item and seller alias when populated
       setItem(res.data.item || res.data)
     }catch(e){
       console.error('Failed to fetch item:', e)
@@ -46,6 +58,9 @@ export default function ItemDetail(){
     }
   }
 
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0)
+
   if(loading) return <div className="p-4">Loading item...</div>
   if(pageError) return <div className="p-4 text-red-600">{pageError}</div>
   if(!item) return <div className="p-4">Item not found</div>
@@ -56,7 +71,18 @@ export default function ItemDetail(){
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="md:w-1/3 w-full">
             {item.images && item.images.length>0 ? (
-              <img src={`${UPLOAD_BASE}${item.images[0]}`} alt={item.title} className="w-full rounded-xl object-cover" style={{height:'420px'}} />
+              <div>
+                <div className="card-image overflow-hidden rounded-xl mb-3" style={{height:420}}>
+                  <img onClick={() => { setPhotoIndex(0); setLightboxOpen(true) }} src={`${UPLOAD_BASE}${item.images[photoIndex] || item.images[0]}`} alt={item.title} className="w-full h-full object-contain cursor-zoom-in" />
+                </div>
+                <div className="flex gap-2">
+                  {item.images.map((p,idx)=> (
+                    <button key={idx} onClick={()=>setPhotoIndex(idx)} className={`w-16 h-12 rounded-md overflow-hidden border ${photoIndex===idx? 'border-[rgba(124,58,237,0.3)]' : 'border-[rgba(255,255,255,0.03)]'}`}>
+                      <img src={`${UPLOAD_BASE}${p}`} alt={`thumb-${idx}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              </div>
             ) : <div className="h-72 bg-[rgba(255,255,255,0.02)] rounded-lg flex items-center justify-center"><span className="muted">No Image</span></div>}
           </div>
           <div className="flex-1">
@@ -67,12 +93,15 @@ export default function ItemDetail(){
             </div>
             <div className="text-sm muted mb-4">Campus: {item.campus || 'N/A'}</div>
             <div className="prose max-w-none mb-4">{item.description}</div>
-            <div className="text-sm muted">Seller: {item.sellerName || item.seller?.name || 'Unknown'}</div>
+            <div className="flex items-center gap-3 text-sm muted">
+              <img src={item.seller?.avatarUrl || '/placeholder-avatar.png'} alt="seller" className="w-7 h-7 rounded-full object-cover" />
+              <div>Seller: <span className="font-medium text-[--text]">{item.seller?.name || 'Unknown'}</span></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="card">
+        <div className="card">
         <h4 className="text-lg font-semibold">Send Buy Request</h4>
         {error && <div className="text-red-400 p-2 bg-[rgba(255,0,0,0.04)] rounded mt-2">{error}</div>}
         {success && <div className="text-green-400 p-2 bg-[rgba(0,255,128,0.04)] rounded mt-2">{success}</div>}
@@ -82,6 +111,7 @@ export default function ItemDetail(){
           <Button variant="secondary" onClick={()=>{ setMessage(''); setError(null); setSuccess(null); }}>Reset</Button>
         </div>
       </div>
+        <Lightbox open={lightboxOpen} images={item.images || []} index={photoIndex} onClose={()=>setLightboxOpen(false)} />
     </div>
   )
-}
+  }
