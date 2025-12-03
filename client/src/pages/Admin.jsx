@@ -55,13 +55,13 @@ function UsersTab(){
     }
   }
 
-  function openDelete(user){
+  function openBan(user){
     setSelectedUser(user)
     setConfirmReason('')
     setConfirmOpen(true)
   }
 
-  async function confirmDelete(reason){
+  async function confirmBan(reason){
     if (!selectedUser) return
     setDeleting(true)
     try {
@@ -70,7 +70,7 @@ function UsersTab(){
       fetchUsers()
     } catch (e) {
       console.error(e)
-      alert('Failed to delete user')
+      alert('Failed to ban user')
     } finally {
       setDeleting(false)
     }
@@ -86,7 +86,7 @@ function UsersTab(){
             <div className="font-medium">{u.name}</div>
             <div className="text-xs muted">{u.email} · {u.role}</div>
           </div>
-          <Button variant="primary" size="sm" onClick={() => openDelete(u)}>Delete</Button>
+          <Button variant="primary" size="sm" onClick={() => openBan(u)}>Ban</Button>
         </div>
       ))}
       
@@ -114,11 +114,11 @@ function UsersTab(){
 
       <ConfirmModal
         open={confirmOpen}
-        title="Delete User?"
-        message={`Are you sure you want to delete ${selectedUser?.name}? This action will soft-delete the user and can be reversed.`}
+        title="Ban User?"
+        message={`Are you sure you want to ban ${selectedUser?.name}? They will no longer be able to access the platform. This action can be reversed.`}
         hasReason={true}
         onReasonChange={setConfirmReason}
-        onConfirm={confirmDelete}
+        onConfirm={confirmBan}
         onCancel={() => setConfirmOpen(false)}
         loading={deleting}
       />
@@ -222,6 +222,120 @@ function ItemsTab(){
   )
 }
 
+function DeletedTab(){
+  const [deletedUsers, setDeletedUsers] = useState([])
+  const [deletedItems, setDeletedItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [subTab, setSubTab] = useState('users')
+  const [page, setPage] = useState(1)
+  const [pagination, setPagination] = useState({})
+  const [restoring, setRestoring] = useState(false)
+
+  useEffect(() => { fetchDeleted() }, [page, subTab])
+
+  async function fetchDeleted(){
+    setLoading(true)
+    try {
+      if (subTab === 'users') {
+        const res = await api.get('/admin/users/deleted/list', { params: { page, pageSize: 10 } })
+        setDeletedUsers(res.data.users || [])
+        setPagination(res.data.pagination || {})
+      } else {
+        const res = await api.get('/admin/items/deleted/list', { params: { page, pageSize: 10 } })
+        setDeletedItems(res.data.items || [])
+        setPagination(res.data.pagination || {})
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function restoreItem(id, type){
+    if (!confirm(`Restore this ${type}?`)) return
+    setRestoring(true)
+    try {
+      if (type === 'user') {
+        await api.post(`/admin/users/${id}/restore`)
+      } else {
+        await api.post(`/admin/items/${id}/restore`)
+      }
+      fetchDeleted()
+    } catch (e) {
+      console.error(e)
+      alert(`Failed to restore ${type}`)
+    } finally {
+      setRestoring(false)
+    }
+  }
+
+  if (loading) return <div className="p-6">Loading deleted records...</div>
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => { setSubTab('users'); setPage(1) }} className={`px-3 py-1 rounded ${subTab === 'users' ? 'bg-[rgba(124,58,237,0.15)]' : ''}`}>Banned Users</button>
+        <button onClick={() => { setSubTab('items'); setPage(1) }} className={`px-3 py-1 rounded ${subTab === 'items' ? 'bg-[rgba(124,58,237,0.15)]' : ''}`}>Deleted Items</button>
+      </div>
+
+      <div className="space-y-3">
+        {subTab === 'users' ? (
+          <>
+            {deletedUsers.length === 0 && <div className="card p-4">No banned users</div>}
+            {deletedUsers.map(u => (
+              <div key={u._id} className="card flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{u.name}</div>
+                  <div className="text-xs muted">{u.email}</div>
+                  {u.deletionReason && <div className="text-xs muted mt-1">Reason: {u.deletionReason}</div>}
+                </div>
+                <Button variant="secondary" size="sm" onClick={() => restoreItem(u._id, 'user')} disabled={restoring}>Unban</Button>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            {deletedItems.length === 0 && <div className="card p-4">No deleted items</div>}
+            {deletedItems.map(i => (
+              <div key={i.id} className="card flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{i.title}</div>
+                  <div className="text-xs muted">{i.seller?.name || 'Unknown'}</div>
+                  {i.deletionReason && <div className="text-xs muted mt-1">Reason: {i.deletionReason}</div>}
+                </div>
+                <Button variant="secondary" size="sm" onClick={() => restoreItem(i.id, 'item')} disabled={restoring}>Restore</Button>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+
+      {pagination.pages && pagination.pages > 1 && (
+        <div className="flex gap-2 justify-center mt-4">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setPage(Math.max(1, page - 1))}
+            disabled={page === 1}
+          >
+            ← Prev
+          </Button>
+          <span className="px-3 py-2 text-sm">Page {page} of {pagination.pages}</span>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setPage(Math.min(pagination.pages, page + 1))}
+            disabled={page >= pagination.pages}
+          >
+            Next →
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Admin(){
   const [tab, setTab] = useState('users')
   return (
@@ -232,9 +346,10 @@ export default function Admin(){
           <div className="flex gap-2">
             <button onClick={() => setTab('users')} className={`px-3 py-1 rounded ${tab === 'users' ? 'bg-[rgba(124,58,237,0.15)]' : ''}`}>Users</button>
             <button onClick={() => setTab('items')} className={`px-3 py-1 rounded ${tab === 'items' ? 'bg-[rgba(124,58,237,0.15)]' : ''}`}>Items</button>
+            <button onClick={() => setTab('deleted')} className={`px-3 py-1 rounded ${tab === 'deleted' ? 'bg-[rgba(124,58,237,0.15)]' : ''}`}>Deleted</button>
           </div>
         </div>
-        {tab === 'users' ? <UsersTab /> : <ItemsTab />}
+        {tab === 'users' ? <UsersTab /> : tab === 'items' ? <ItemsTab /> : <DeletedTab />}
       </div>
     </div>
   )

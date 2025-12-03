@@ -88,6 +88,26 @@ export async function restoreUser(req, res) {
   res.json({ message: 'User restored', user: { _id: user._id, name: user.name } });
 }
 
+export async function listDeletedUsers(req, res) {
+  const { page = 1, pageSize = 10 } = req.query;
+  const skip = (Math.max(1, parseInt(page)) - 1) * parseInt(pageSize);
+  const limit = Math.max(1, Math.min(100, parseInt(pageSize)));
+
+  const query = { deleted: true };
+  const total = await User.countDocuments(query);
+  const users = await User.find(query)
+    .select('name email role deletedAt deletionReason')
+    .sort({ deletedAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  res.json({
+    users,
+    pagination: { page: parseInt(page), pageSize: limit, total, pages: Math.ceil(total / limit) }
+  });
+}
+
 export async function listItems(req, res) {
   const { page = 1, pageSize = 10 } = req.query;
   const skip = (Math.max(1, parseInt(page)) - 1) * parseInt(pageSize);
@@ -156,4 +176,34 @@ export async function restoreItem(req, res) {
 
   await logAction(req.user, 'restore-item', 'item', item._id, targetDetails);
   res.json({ message: 'Item restored', item: { _id: item._id, title: item.title } });
+}
+
+export async function listDeletedItems(req, res) {
+  const { page = 1, pageSize = 10 } = req.query;
+  const skip = (Math.max(1, parseInt(page)) - 1) * parseInt(pageSize);
+  const limit = Math.max(1, Math.min(100, parseInt(pageSize)));
+
+  const query = { deleted: true };
+  const total = await Item.countDocuments(query);
+  const items = await Item.find(query)
+    .select('title sellerId status deletedAt deletionReason')
+    .populate('sellerId', 'name')
+    .sort({ deletedAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  const mapped = items.map(i => ({
+    id: i._id,
+    title: i.title,
+    status: i.status,
+    seller: i.sellerId ? { id: i.sellerId._id, name: i.sellerId.name } : null,
+    deletedAt: i.deletedAt,
+    deletionReason: i.deletionReason
+  }));
+
+  res.json({
+    items: mapped,
+    pagination: { page: parseInt(page), pageSize: limit, total, pages: Math.ceil(total / limit) }
+  });
 }
