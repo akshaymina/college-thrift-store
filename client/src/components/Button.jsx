@@ -5,16 +5,16 @@ function classNames(...xs){ return xs.filter(Boolean).join(' ') }
 
 export default function Button({ children, variant='primary', size='md', to, className='', type='button', onClick, disabled=false, ariaLabel }){
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm rounded-md',
-    md: 'px-4 py-2 text-sm rounded-lg',
-    lg: 'px-5 py-3 text-base rounded-xl'
+    sm: 'px-4 py-2.5 text-base rounded-lg',
+    md: 'px-6 py-3.5 text-lg rounded-lg',
+    lg: 'px-8 py-4 text-xl rounded-xl'
   }
 
   const variants = {
-    primary: 'text-white bg-gradient-to-r from-[rgba(var(--brand),1)] to-[rgba(6,182,212,0.12)] shadow-[0_12px_40px_rgba(var(--brand),0.12)]',
-    secondary: 'text-[--text] bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.04)]',
+    primary: 'text-white bg-gradient-to-r from-[rgba(var(--brand),1)] to-[rgba(6,182,212,0.3)] shadow-[0_16px_48px_rgba(var(--brand),0.28)] hover:shadow-[0_20px_60px_rgba(var(--brand),0.35)]',
+    secondary: 'text-white bg-[rgba(255,255,255,0.12)] border border-[rgba(255,255,255,0.2)] shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:bg-[rgba(255,255,255,0.18)]',
     ghost: 'text-[--text] bg-transparent',
-    outline: 'text-[--text] bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.06)]'
+    outline: 'text-[--text] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.12)] shadow-[0_6px_16px_rgba(0,0,0,0.3)]'
   }
 
   const base = 'inline-flex items-center justify-center gap-2 font-semibold transform transition duration-180 ease-out select-none';

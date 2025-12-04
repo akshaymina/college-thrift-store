@@ -45,28 +45,28 @@ export default function Navbar(){
   return (
     <header className={`sticky top-0 z-50 transition-all duration-200 ${scrolled ? 'shadow-md' : ''}`}>
       <div className="glass border-b border-[rgba(255,255,255,0.06)] bg-[rgba(11,13,16,0.8)]">
-        <div className="container max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="container max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
           
           {/* Brand */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <img src={Logo} alt="MNIT Thrift Store" className="w-10 h-10 rounded-lg object-cover transition-transform group-hover:scale-105" />
+          <Link to="/" className="flex items-center gap-4 group">
+            <img src={Logo} alt="MNIT Thrift Store" className="w-16 h-16 rounded-lg object-cover transition-transform group-hover:scale-105" />
             <div className="hidden sm:flex flex-col">
-              <div className="text-base font-bold leading-tight">MNIT Thrift Store</div>
-              <div className="text-xs opacity-60">Campus Marketplace</div>
+              <div className="text-2xl font-bold leading-tight">MNIT Thrift Store</div>
+              <div className="text-base opacity-60">Campus Marketplace</div>
             </div>
           </Link>
 
           {/* Center Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
-            <Link to="/" className={`text-sm font-medium transition-colors ${isActive('/')}`}>
+          <nav className="hidden lg:flex items-center gap-10">
+            <Link to="/" className={`text-base font-medium transition-colors ${isActive('/')}`}>
               Browse
             </Link>
-            <Link to="/items" className={`text-sm font-medium transition-colors ${isActive('/items')}`}>
+            <Link to="/items" className={`text-base font-medium transition-colors ${isActive('/items')}`}>
               Items
             </Link>
-            <a href="#" className={`text-sm font-medium muted hover:text-white transition-colors`}>
+            <Link to="/about" className={`text-base font-medium transition-colors ${isActive('/about')}`}>
               About
-            </a>
+            </Link>
           </nav>
 
           {/* Right: Actions */}
@@ -76,14 +76,14 @@ export default function Navbar(){
             {user ? (
               <>
                 {/* Action Buttons */}
-                <div className="hidden sm:flex items-center gap-2">
-                  <Button to="/wishlist" variant="secondary" size="sm">
+                <div className="hidden sm:flex items-center gap-3">
+                  <Button to="/wishlist" variant="secondary" size="md">
                     ❤️ Wishlist
                   </Button>
-                  <Button to="/items/new" variant="primary" size="sm">
+                  <Button to="/items/new" variant="primary" size="md">
                     ✚ Sell
                   </Button>
-                  <Button to="/requests/mine" variant="secondary" size="sm">
+                  <Button to="/requests/mine" variant="secondary" size="md">
                     📥 Requests
                   </Button>
                 </div>
@@ -96,58 +96,58 @@ export default function Navbar(){
                     title={user.name}
                   >
                     {user.avatarUrl ? (
-                      <img src={user.avatarUrl.startsWith('/uploads') ? `${UPLOAD_BASE}${user.avatarUrl}` : user.avatarUrl} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
+                      <img src={user.avatarUrl.startsWith('/uploads') ? `${UPLOAD_BASE}${user.avatarUrl}` : user.avatarUrl} alt={user.name} className="w-10 h-10 rounded-full object-cover" />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[rgba(124,58,237,0.4)] to-[rgba(6,182,212,0.2)] flex items-center justify-center text-white text-sm font-semibold">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[rgba(124,58,237,0.4)] to-[rgba(6,182,212,0.2)] flex items-center justify-center text-white text-base font-semibold">
                         {user.name?.[0] || 'U'}
                       </div>
                     )}
-                    <span className="hidden sm:inline text-sm font-medium">{user.name?.split(' ')[0]}</span>
+                    <span className="hidden sm:inline text-base font-medium">{user.name?.split(' ')[0]}</span>
                   </button>
 
                   {/* Dropdown Menu */}
                   {dropdownOpen && (
                     <div className="absolute top-full right-0 mt-2 w-48 rounded-xl glass border border-[rgba(255,255,255,0.06)] shadow-xl animate-in fade-in slide-in-from-top-2 duration-150">
-                      <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.03)]">
-                        <p className="text-sm font-semibold">{user.name}</p>
-                        <p className="text-xs muted">{user.email}</p>
+                      <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.03)]">
+                        <p className="text-base font-semibold">{user.name}</p>
+                        <p className="text-sm muted">{user.email}</p>
                       </div>
 
-                      <div className="py-2">
+                      <div className="py-3">
                         <Link 
                           to="/profile" 
                           onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                          className="flex items-center gap-2 px-5 py-3 text-base hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                         >
                           👤 Profile
                         </Link>
                         <Link 
                           to="/wishlist" 
                           onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                          className="flex items-center gap-2 px-5 py-3 text-base hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                         >
                           ❤️ Wishlist
                         </Link>
                         <Link 
                           to="/requests/received" 
                           onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                          className="flex items-center gap-2 px-5 py-3 text-base hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                         >
                           📦 My Listings
                         </Link>
                         <a 
                           href="#" 
                           onClick={(e) => {e.preventDefault(); setDropdownOpen(false)}}
-                          className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                          className="flex items-center gap-2 px-5 py-3 text-base hover:bg-[rgba(255,255,255,0.05)] transition-colors"
                         >
                           ⚙️ Settings
                         </a>
                       </div>
 
-                      <div className="px-2 py-2 border-t border-[rgba(255,255,255,0.03)]">
+                      <div className="px-3 py-3 border-t border-[rgba(255,255,255,0.03)]">
                         <button
                           onClick={handleLogout}
-                          className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-[rgba(248,113,113,0.1)] rounded-lg transition-colors"
+                          className="w-full text-left px-5 py-3 text-base text-red-400 hover:bg-[rgba(248,113,113,0.1)] rounded-lg transition-colors"
                         >
                           🚪 Logout
                         </button>
@@ -158,10 +158,10 @@ export default function Navbar(){
               </>
             ) : (
               <>
-                <Link to="/login" className="hidden sm:inline text-sm font-medium muted hover:text-white transition-colors">
+                <Link to="/login" className="hidden sm:inline text-base font-medium muted hover:text-white transition-colors">
                   Login
                 </Link>
-                <Button to="/signup" variant="primary" size="sm">
+                <Button to="/signup" variant="primary" size="md">
                   Sign up
                 </Button>
               </>
