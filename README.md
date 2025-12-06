@@ -130,6 +130,21 @@ Output files will be in `client/dist/`, ready to deploy to any static hosting se
 
 ---
 
+## 🌐 Deploy Online (Share with Friends!)
+
+Want to make your app available online so friends can access it without installing anything?
+
+**See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for a complete step-by-step guide!**
+
+Quick overview:
+- **Frontend:** Deploy to **Vercel** (free, auto-deploys from GitHub)
+- **Backend:** Deploy to **Railway** or **Render** (free tier available)
+- **Database:** Use **MongoDB Atlas** (free tier: 512 MB storage)
+
+Your friends can then access the app with a single shareable link! 🚀
+
+---
+
 ## 📁 Project Structure
 
 ```
