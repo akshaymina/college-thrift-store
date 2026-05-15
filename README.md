@@ -6,8 +6,8 @@ A full-stack campus marketplace for MNIT students to buy, sell, and exchange ite
 
 ## Screenshots
 
-| Home / Browse | Item Listing | Admin Dashboard |
-|---|---|---|
+
+
 | ![Home](server/images/createAccount.png)  ![Listing](server/images/itemList.png)  ![Admin](server/images/listItem.png) |
 
 
