@@ -1,241 +1,106 @@
-# 🎓 MNIT Thrift Store
+# MNIT Thrift Store
 
-> A vibrant campus marketplace where MNIT students buy, sell, and exchange items securely within the college community.
-
-MNIT Thrift Store is a modern, full-stack web application designed to foster sustainable shopping and peer-to-peer commerce among students. With a sleek, dark-themed interface and powerful admin tools, it makes campus trading fast, safe, and fun.
+A full-stack campus marketplace for MNIT students to buy, sell, and exchange items within the college community.
 
 ---
 
-## ✨ Features
+## Screenshots
 
-| Feature | Description |
-|---------|-------------|
-| 📦 **Item Marketplace** | Browse, list, and search for items from campus peers |
-| 💬 **Smart Requests** | Send buy requests directly to sellers and negotiate |
-| ❤️ **Wishlist** | Save favorite items for later |
-| 👤 **User Profiles** | Manage listings, requests, and account settings |
-| 🛡️ **Admin Dashboard** | Powerful admin tools to manage users, items, and disputes |
-| 🔐 **Secure Auth** | JWT-based authentication with role-based access control |
-| 🎨 **Premium UI** | Responsive, accessible, dark-modern design (desktop-first) |
-| 🗂️ **Image Uploads** | Seamless item photo uploads |
+| Home / Browse | Item Listing | Admin Dashboard |
+|---|---|---|
+| ![Home](images/createAccount.png) | ![Listing](images/itemList.png) | ![Admin](images/listItem.png) |
+
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-**Frontend:**
-- React 18 + Vite (fast, modern bundler)
-- TailwindCSS (utility-first styling)
-- React Router v6 (client-side routing)
-- Axios (HTTP client)
-
-**Backend:**
-- Node.js + Express (REST API)
-- MongoDB (NoSQL database)
-- JWT (authentication)
-- bcrypt (password hashing)
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, TailwindCSS, React Router v6, Axios |
+| Backend | Node.js, Express.js, REST API |
+| Database | MongoDB (Mongoose ODM) |
+| Auth | JWT + bcrypt |
 
 ---
 
-## 📋 Prerequisites
+## Key Features
 
-Before you begin, ensure you have the following installed:
-
-- **Node.js** v18+ ([download](https://nodejs.org/))
-- **npm** v9+ (comes with Node.js)
-- **MongoDB** (local or cloud, e.g., MongoDB Atlas) (Optional for now)
-- **Git**
-
----
-
-## 🚀 Getting Started (How to run)
-
-### Step 1: Clone the Repository
-
-```bash
-git clone https://github.com/akshaymina/college-thrift-store.git
-cd college-thrift-store
-```
-
-### Step 2: Install Dependencies
-
-**Backend:**
-```bash
-cd server
-npm install
-```
-
-**Frontend:**
-```bash
-cd ../client
-npm install
-```
-
-### Step 3: Set Up Environment Variables
-
-Create a `.env` file in the `server/` directory:
-
-```env
-# Server Port
-PORT=5000
-
-# MongoDB Connection (local or cloud)
-MONGO_URI=mongodb+srv://storeAdmin:Lr60jGwWlDkMH2oY@thriftcluster.ux3vjpx.mongodb.net/?appName=thriftCluster
-
-# JWT Configuration
-JWT_SECRET=bajra_ki_roti
-JWT_EXPIRES_IN=1d
-
-# CORS & Security
-CORS_ORIGIN=http://localhost:5173
-COOKIE_SECURE=false
-
-# Admin Account (auto-created on first run)
-ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=StrongPass123
-```
-
-> 💡 **Tip:** The admin account will be automatically created in MongoDB when the server starts.
-
-### Step 4: Launch Development Servers
-
-**Terminal 1 — Backend API:**
-```bash
-cd server
-npm run dev
-```
-> API runs at: [http://localhost:5000/api](http://localhost:5000/api)
-
-**Terminal 2 — Frontend (new terminal):**
-```bash
-cd client
-npm run dev
-```
-> App runs at: [http://localhost:5173](http://localhost:5173)
-
-✅ You're ready! Open [http://localhost:5173](http://localhost:5173) in your browser.
+- **Authentication** — JWT-based login/signup with bcrypt password hashing and role-based access control (user / admin)
+- **Marketplace** — Create, browse, and search item listings with image uploads
+- **Buy Requests** — Send and manage purchase requests directly to sellers
+- **Wishlist** — Save items for later
+- **Admin Dashboard** — Manage users, moderate listings, and resolve disputes
+- **Responsive UI** — Dark-themed design system built with TailwindCSS
 
 ---
 
-## 🏗️ Build for Production
-
-To create a production-ready bundle:
-
-```bash
-cd client
-npm run build
-```
-
-Output files will be in `client/dist/`, ready to deploy to any static hosting service (Vercel, Netlify, GitHub Pages, etc.).
-
----
-
-## 🌐 Deploy Online (Share with Friends!)
-
-Want to make your app available online so friends can access it without installing anything?
-
-**See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for a complete step-by-step guide!**
-
-Quick overview:
-- **Frontend:** Deploy to **Vercel** (free, auto-deploys from GitHub)
-- **Backend:** Deploy to **Railway** or **Render** (free tier available)
-- **Database:** Use **MongoDB Atlas** (free tier: 512 MB storage)
-
-Your friends can then access the app with a single shareable link! 🚀
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 college-thrift-store/
 ├── client/                 # React frontend (Vite + TailwindCSS)
-│   ├── src/
-│   │   ├── components/    # Reusable UI components
-│   │   ├── pages/         # Route pages
-│   │   ├── contexts/      # React Context (Auth, Theme)
-│   │   ├── services/      # API client (axios)
-│   │   └── App.jsx        # Main app component
-│   └── package.json
+│   └── src/
+│       ├── components/     # Reusable UI components
+│       ├── pages/          # Route-level pages
+│       ├── contexts/       # Auth + Theme context (React Context API)
+│       └── services/       # Axios API client
 │
-├── server/                 # Node.js/Express API
-│   ├── src/
-│   │   ├── models/        # MongoDB schemas
-│   │   ├── routes/        # API endpoints
-│   │   ├── middleware/    # Auth, error handling
-│   │   ├── controllers/   # Business logic
-│   │   └── index.js       # Server entry
-│   ├── uploads/           # User-uploaded images
-│   └── package.json
-│
-└── README.md              # This file
+└── server/                 # Node.js / Express REST API
+    └── src/
+        ├── models/         # Mongoose schemas
+        ├── routes/         # API endpoints
+        ├── controllers/    # Business logic
+        └── middleware/     # Auth guard, error handling
 ```
 
 ---
 
-## 🔑 Admin Access
+## Running Locally
 
-Admins have special privileges to manage the platform:
+**Prerequisites:** Node.js v18+, MongoDB (local or Atlas)
 
-1. **Auto-create Admin:** On server startup, an admin user is automatically created using `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env`
-2. **Login:** Use the admin credentials at [http://localhost:5173/login](http://localhost:5173/login)
-3. **Dashboard:** Navigate to `/admin` to access the admin panel
-4. **Permissions:** Manage users, moderate listings, handle disputes, and more
+```bash
+# 1. Clone
+git clone https://github.com/akshaymina/college-thrift-store.git
+cd college-thrift-store
 
----
+# 2. Install dependencies
+cd server && npm install
+cd ../client && npm install
 
-## 📖 API Documentation
+# 3. Configure environment
+#    Create server/.env — see .env.example for required variables
 
-The backend provides REST endpoints at `/api/`:
+# 4. Start servers (two terminals)
+cd server && npm run dev      # API → http://localhost:5000/api
+cd client && npm run dev      # App → http://localhost:5173
+```
 
-- **Auth:** `/auth/login`, `/auth/signup`, `/auth/logout`
-- **Items:** `/items` (CRUD operations)
-- **Requests:** `/requests/mine`, `/requests/received`
-- **Users:** `/users/profile`
-- **Admin:** `/admin/*` (admin-only)
+**Required environment variables** (create `server/.env`):
 
-For detailed endpoint docs, refer to the route files in `server/src/routes/`.
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=1d
+CORS_ORIGIN=http://localhost:5173
+ADMIN_EMAIL=your_admin_email
+ADMIN_PASSWORD=your_admin_password
+```
 
----
-
-## 🎨 Design System
-
-This project uses a **premium, dark-modern design** with:
-- Custom color tokens (bg, surface, text, muted, primary, accent)
-- Consistent typography scale (desktop-first)
-- 8px spacing rhythm
-- Soft, subtle shadows
-- Accessible contrast ratios (≥ 4.5:1)
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! To contribute:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/awesome-feature`)
-3. Commit your changes (`git commit -m 'Add awesome feature'`)
-4. Push to the branch (`git push origin feature/awesome-feature`)
-5. Open a Pull Request
+> An admin account is auto-created on first server start using the credentials above.
 
 ---
 
+## API Endpoints
 
-## 💬 Support
-
-Have questions or run into issues? 
-
-- **Check the docs** above
-- **Open an issue** on GitHub
-- **Contact:** admin@college-thrift.local
-
----
-
-<div align="center">
-
-**Made with ❤️ for MNIT Jaipur students**
-
-![MNIT Logo](https://raw.githubusercontent.com/akshaymina/college-thrift-store/main/client/src/512px-Mnit_logo.png)
-
-</div>
+| Route | Description |
+|---|---|
+| `POST /api/auth/signup` | Register new user |
+| `POST /api/auth/login` | Login, returns JWT |
+| `GET /api/items` | Browse all listings |
+| `POST /api/items` | Create a listing (auth required) |
+| `GET /api/requests/mine` | View sent requests |
+| `GET /api/requests/received` | View received requests |
+| `GET /api/admin/*` | Admin-only management routes |
